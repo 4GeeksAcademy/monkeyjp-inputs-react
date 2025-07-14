@@ -51,7 +51,7 @@ const Home = () => {
   },
   {
     nombre: "Legolas",
-    frase: "A wizard is never late, nor is he early. He arrives precisely when he means to.",
+    frase: "What about side-by-side with a friend?",
     imagen: "https://static.wikia.nocookie.net/bibliotecadelatierramedia/images/c/c0/Legolas.jpg/revision/latest?cb=20140322121446&path-prefix=es"
   },
   {
