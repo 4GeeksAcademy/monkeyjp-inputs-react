@@ -6,38 +6,7 @@ import rigoImage from "../../img/rigo-baby.jpg";
 //create your first component
 const Home = () => {
 
-  // const [inputValue, setInputValue] = useState("")
-  // const [nombre, setNombre] = useState(null)
-
-  // const onInputChange = (e) => {
-  //   setInputValue(e.target.value)
-  // }
-
-  // const handleKeyUp = (e) => {
-  //   if (inputValue.trim !== "" && e.key === "Enter") {
-  //     setNombre(inputValue)
-  //     setInputValue("")
-  //   }
-  // }
-
-  // return (
-  //   <div className="container">
-  //     <label className="form-label" htmlFor="name">Escribe un Nombre:</label>
-  //     <input 
-  //       className="form-control" 
-  //       value={inputValue}
-  //       id="name" 
-  //       name="name" 
-  //       type="text" 
-  //       onChange={onInputChange} 
-  //       onKeyUp={handleKeyUp}  
-  //     />
-  //     {nombre && <p>Hola {nombre}</p>}
-  //   </div>
-  // )
-
-
-
+  
   const personajesLOTR = [
   {
     nombre: "Gandalf",
@@ -116,18 +85,7 @@ const Home = () => {
   }
 ];
   
-	const [personajes, setPersonajes] = useState([
-    {
-      nombre: "Frodo Baggins",
-      frase: "I will take the Ring to Mordor, though I do not know the way.",
-      imagen: "https://static.wikia.nocookie.net/lotr/images/3/32/Frodo_%28FotR%29.png/revision/latest?cb=20221006065757"
-    },
-    {
-      nombre: "Gandalf",
-      frase: "You shall not pass!",
-      imagen: "https://static1.colliderimages.com/wordpress/wp-content/uploads/2024/10/why-gandalf-needs-a-staff-in-the-lord-of-the-rings.jpg"
-    }
-  ]);
+	const [personajes, setPersonajes] = useState([]);
 
   // Estados del formulario
   const [nuevoNombre, setNuevoNombre] = useState("");
@@ -145,13 +103,61 @@ const Home = () => {
       imagen: nuevaImagen
     };
 
-    setPersonajes([...personajes, nuevoPersonaje]);
-
+    // setPersonajes([...personajes, nuevoPersonaje]);
+    crearPersonaje()
     // Limpiar formulario
     setNuevoNombre("");
     setNuevaFrase("");
     setNuevaImagen("");
   };
+
+  const getPersonajes = async () => {
+    const response = await fetch("https://verbose-computing-machine-g747pp45rjx3vvp4-8000.app.github.dev/usuarios/monkey/personajes")
+    console.log(response);
+    if (!response.ok) {
+      console.log("debemos crear al usuario");
+      crearUsuario()
+      return
+    }
+    const data = await response.json()
+    setPersonajes(data)
+    
+  }
+
+  const crearUsuario = async () => {
+    const response = await fetch("https://verbose-computing-machine-g747pp45rjx3vvp4-8000.app.github.dev/usuarios/monkey", {method: "POST"})
+    console.log(response);
+    if (response.ok) {
+      const data = await response.json()
+      console.log(data);
+      getPersonajes()
+      
+    }
+    
+  } 
+
+  const crearPersonaje = async () => {
+    const nuevoPersonaje = {
+      nombre: nuevoNombre,
+      frase: nuevaFrase,
+      imagen: nuevaImagen
+    };
+    const response = await fetch("https://verbose-computing-machine-g747pp45rjx3vvp4-8000.app.github.dev/usuarios/monkey/personajes", {
+      method: "POST",
+      body: JSON.stringify(nuevoPersonaje),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    if (response.ok) {
+      getPersonajes()
+    }
+  }
+
+
+  useEffect(()=>{
+    getPersonajes()
+  },[])
 
   return (
     <div className="container my-4">
